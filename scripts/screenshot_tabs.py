@@ -37,8 +37,11 @@ def main():
         page.goto(base, wait_until="networkidle", timeout=60000)
         page.wait_for_timeout(800)
         for tab in TABS:
-            page.click(f'nav.tabs button[data-tab="{tab}"]')
-            page.wait_for_timeout(1400)
+            btn = page.locator(f'button[data-tab="{tab}"]')
+            btn.scroll_into_view_if_needed()
+            btn.click()
+            page.wait_for_selector(f"section#{tab}.tab.active", timeout=10000)
+            page.wait_for_timeout(2000)
             out1 = Path(f"/workspace/arg_{tab}.png")
             out2 = DOCS / f"tab-{tab}.png"
             page.screenshot(path=str(out1), full_page=True)
