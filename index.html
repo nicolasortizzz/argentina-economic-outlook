@@ -73,16 +73,17 @@
     <div class="card"><h3>EMAE — monthly % change (INDEC)</h3><div id="resEmae" class="chart sk"></div></div>
     <div class="card"><h3>Primary fiscal balance (ARS mn, Ministry via datos.gob.ar)</h3><div id="resFiscal" class="chart sk"></div></div>
   </div>
-  <div class="card"><h3>Disinflation path (BCRA CPI interannual %)</h3><div id="resDisinf" class="chart sk"></div></div>
+  <div class="card"><h3>Disinflation path (INDEC national CPI % y/y)</h3><div id="resDisinf" class="chart sk"></div></div>
 </section>
 
 <section id="sustainability" class="tab">
   <div class="grid g2">
-    <div class="card"><div class="card-h"><h3>Debt dynamics simulator</h3><span class="muted small">d<sub>t+1</sub> = d<sub>t</sub>(1+r)/(1+g) − pb</span></div>
+    <div class="card"><div class="card-h"><h3>Debt dynamics simulator</h3><span class="muted small">d<sub>t+1</sub> = d<sub>t</sub>(1+r<sub>eff</sub>)/(1+g) − pb · FX leg adds real depreciation on foreign-currency share</span></div>
       <div id="debtSliders" class="vsliders"></div>
+      <div id="debtPbStar" class="debt-pb-star muted small"></div>
       <div id="debtOut" class="chart sk"></div>
     </div>
-    <div class="card"><h3>Real exchange rate (proxy)</h3><p class="muted small">Official ARS/USD vs US CPI (World Bank) and Argentina CPI index (INDEC) — illustrative real appreciation/depreciation.</p><div id="reerChart" class="chart tall sk"></div></div>
+    <div class="card"><h3>Bilateral real exchange rate (USD)</h3><p class="muted small" id="rerNote">Index = official FX × US CPI ÷ Argentina CPI; base Dec 2023 = 100. <b>Higher</b> = more depreciated / competitive vs the US dollar.</p><div id="reerChart" class="chart tall sk"></div></div>
   </div>
   <div class="grid g2">
     <div class="card"><h3>Reserves vs external payments calendar</h3><div id="payCal"></div></div>

@@ -1,0 +1,73 @@
+{
+  "fetched_at": "2026-10-15T02:49:13Z",
+  "currency": "USD",
+  "unit": "millions",
+  "note": "Bond totals cross-checked with Ministry of Economy breakdown cited in press; IMF net service is Estimate from program schedules.",
+  "reserves_comparison": "Compare sum of payments to BCRA gross reserves (series 1) \u2014 illustrative liquidity buffer.",
+  "items": [
+    {
+      "date": "2026-01-09",
+      "type": "Bonares + Globales",
+      "coupon_mn": 1505,
+      "amort_mn": 2711,
+      "total_mn": 4216,
+      "source_url": "https://www.infobae.com/economia/2026/01/07/como-es-el-plan-del-gobierno-para-pagar-los-usd-4200-millones-que-vencen-el-proximo-viernes/",
+      "documented": true,
+      "detail": "MoE breakdown: Globales USD 2,567M; Bonares USD 1,649M"
+    },
+    {
+      "date": "2026-07-09",
+      "type": "Bonares + Globales",
+      "coupon_mn": 1847,
+      "amort_mn": 2707,
+      "total_mn": 4554,
+      "source_url": "https://tn.com.ar/economia/2026/07/09/con-prestamos-y-fondos-propios-el-gobierno-desembolsa-us4400-millones-para-el-pago-a-los-bonistas/",
+      "documented": true,
+      "detail": "PPI/TN: capital USD 2,707M + interest USD 1,847M"
+    },
+    {
+      "date": "2027-01-09",
+      "type": "Bonares + Globales",
+      "coupon_mn": null,
+      "amort_mn": null,
+      "total_mn": 5000,
+      "label": "Estimate",
+      "source_url": "https://www.lanacion.com.ar/economia/caputo-se-aseguro-los-fondos-para-pagar-us4400-millones-el-9-de-julio-y-presenta-el-plan-para-cubrir-nid05072026/",
+      "documented": false,
+      "detail": "LA NACION/1816: ~USD 10.0bn Globales+Bonares in 2027 split Jan/Jul \u2014 Jan share approximated"
+    },
+    {
+      "date": "2027-07-09",
+      "type": "Bonares + Globales",
+      "coupon_mn": null,
+      "amort_mn": null,
+      "total_mn": 5000,
+      "label": "Estimate",
+      "source_url": "https://www.lanacion.com.ar/economia/caputo-se-aseguro-los-fondos-para-pagar-us4400-millones-el-9-de-julio-y-presenta-el-plan-para-cubrir-nid05072026/",
+      "documented": false,
+      "detail": "Second half of ~USD 10.0bn 2027 Bonares/Globales schedule"
+    },
+    {
+      "date": "2026-H2",
+      "type": "IMF charges & repurchases (net)",
+      "coupon_mn": null,
+      "amort_mn": null,
+      "total_mn": 2000,
+      "label": "Estimate",
+      "source_url": "https://www.lanacion.com.ar/economia/caputo-se-aseguro-los-fondos-para-pagar-us4400-millones-el-9-de-julio-y-presenta-el-plan-para-cubrir-nid05072026/",
+      "documented": false,
+      "detail": "1816 estimate ~USD 2.0bn net IMF 2026 after disbursements"
+    },
+    {
+      "date": "2027",
+      "type": "IMF charges & repurchases (net)",
+      "coupon_mn": null,
+      "amort_mn": null,
+      "total_mn": 5900,
+      "label": "Estimate",
+      "source_url": "https://www.lanacion.com.ar/economia/caputo-se-aseguro-los-fondos-para-pagar-us4400-millones-el-9-de-julio-y-presenta-el-plan-para-cubrir-nid05072026/",
+      "documented": false,
+      "detail": "1816 estimate ~USD 5.9bn IMF net 2027"
+    }
+  ]
+}

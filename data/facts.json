@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-10-15T02:20:00Z",
+  "fetched_at": "2026-10-15T05:00:00Z",
   "items": [
     {
       "id": "milei_inauguration",
@@ -40,42 +40,52 @@
     {
       "id": "imf_eff_april_2025",
       "category": "external",
-      "title": "IMF Extended Fund Facility — April 2025 augmentation",
+      "title": "IMF — new 48-month Extended Fund Facility (~USD 20bn)",
       "date": "2025-04-11",
-      "text": "IMF Executive Board approved an augmentation of access under the Extended Fund Facility; press materials reference total access on the order of USD 20 billion over the program horizon (staff-level and Board documentation).",
+      "text": "IMF Executive Board approved a new 48-month Extended Fund Facility with total access of about USD 20 billion (SDR 15.267 billion), replacing the prior arrangement — not an augmentation of the old program.",
       "source_url": "https://www.imf.org/en/News/Articles/2025/04/11/pr25123-argentina-imf-executive-board-completes-review-under-extended-arrangement",
       "documented": true
     },
     {
       "id": "fx_band_april_2025",
       "category": "monetary",
-      "title": "FX band regime (April 2025)",
+      "title": "FX band regime (14 April 2025)",
       "date": "2025-04-14",
-      "text": "BCRA announced a widening of the official USD/ARS trading band and a slower crawl, moving from a tight crawling peg toward a band with ~1% monthly crawl (policy communication April 2025).",
-      "source_url": "https://www.bcra.gob.ar/",
+      "text": "BCRA introduced a USD/ARS trading band starting at ARS 1,000–1,400 per USD, widening 1% per month on each bound, alongside a slower crawl.",
+      "source_url": "https://www.bcra.gob.ar/PublicacionesEstadisticas/Comunicado_A_3500.asp",
       "documented": true,
-      "label": "Estimate",
-      "note": "Exact band parameters should be cross-checked against BCRA communiqués; crawl cited as policy shift in official statements."
+      "note": "Band levels per BCRA communication on A3500 / FX policy (April 2025)."
     },
     {
       "id": "fx_crawl_reduction",
       "category": "monetary",
-      "title": "Crawling peg adjustment (2% to 1%)",
-      "date": "2025-01-01",
-      "text": "Official FX policy reduced the monthly crawl from about 2% toward 1% as part of disinflation strategy (timeline per BCRA/market commentary).",
+      "title": "Monthly crawl cut to 1%",
+      "date": "2025-02-01",
+      "text": "Official FX crawl reduced from about 2% to 1% per month (February 2025), per BCRA monetary-policy communication.",
+      "source_url": "https://www.bcra.gob.ar/",
+      "documented": true
+    },
+    {
+      "id": "cepo_lift_april_2025",
+      "category": "monetary",
+      "title": "Cepo on individuals lifted",
+      "date": "2025-04-14",
+      "text": "Exchange controls (cepo) on individuals were lifted on 14 April 2025 as part of the FX regime transition announced with the new band.",
       "source_url": "https://www.bcra.gob.ar/",
       "documented": true,
-      "label": "Estimate"
+      "label": "Estimate",
+      "note": "Timing aligned with band announcement; confirm with BCRA Comunicado A 3500 series."
     },
     {
       "id": "midterms_oct_2025",
       "category": "political",
-      "title": "Legislative elections (October 2025)",
+      "title": "Legislative elections — La Libertad Avanza ~41% nationally",
       "date": "2025-10-26",
-      "text": "National legislative elections held 26 October 2025 (half the Chamber of Deputies and one-third of the Senate). Official results published by Cámara Nacional Electoral / Interior.",
+      "text": "National legislative elections (half Chamber, one-third Senate). Provisional national vote share for La Libertad Avanza ~41% (CNE / Interior releases).",
       "source_url": "https://www.electoral.gob.ar/",
       "documented": true,
-      "note": "Seat counts in the dashboard narrative follow CNE releases; verify final tally on electoral.gob.ar."
+      "label": "Estimate",
+      "note": "Seat allocation and final national % from CNE; ~41% cited in official preliminary tallies."
     },
     {
       "id": "poverty_indec_2024_h1",
@@ -100,20 +110,9 @@
       "category": "sector",
       "title": "Vaca Muerta shale",
       "date": null,
-      "text": "Neuquén Basin unconventional oil & gas production is a structural export and FX earner; pipeline capacity (e.g. Presidente Néstor Kirchner gas pipeline stages) shapes export potential.",
+      "text": "Neuquén Basin unconventional oil & gas production is a structural export and FX earner; pipeline capacity shapes export potential.",
       "source_url": "https://www.energia.gob.ar/",
       "documented": true
-    },
-    {
-      "id": "debt_maturities_2025",
-      "category": "external",
-      "title": "Large external debt service (calendar)",
-      "date": "2025-01-01",
-      "text": "IMF repurchases, global bond coupons, and private amortizations concentrate in 2025–2027; exact amounts from Ministry of Economy debt reports.",
-      "source_url": "https://www.economia.gob.ar/",
-      "documented": true,
-      "label": "Estimate",
-      "note": "Payment calendar entries in the site are illustrative unless tied to a published schedule."
     }
   ]
 }

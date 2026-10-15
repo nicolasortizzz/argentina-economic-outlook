@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T02:23:27Z",
+  "generated_at": "2026-10-15T05:00:00Z",
   "files": [
     "bcra.json",
     "bcra_catalog.json",
@@ -8,6 +8,9 @@
     "imf.json",
     "market.json",
     "facts.json",
-    "sources.json"
+    "sources.json",
+    "us_cpi.json",
+    "rer_bilateral.json",
+    "debt_payments.json"
   ]
 }

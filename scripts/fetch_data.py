@@ -173,6 +173,65 @@ def worldbank_indicator(indicator: str, countries: str = "ARG;BRA;CHL;PER;ISR;ME
     }
 
 
+def fred_cpi_au_csl() -> dict:
+    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL"
+    try:
+        r = SESSION.get(url, timeout=120)
+        r.raise_for_status()
+        import csv
+        import io
+
+        points = []
+        for row in csv.DictReader(io.StringIO(r.text)):
+            v = row.get("CPIAUCSL")
+            if v and v != ".":
+                points.append({"date": row["observation_date"], "value": float(v)})
+        return {
+            "source_url": url,
+            "series_id": "CPIAUCSL",
+            "description": "US CPI-U, all items, SA (FRED)",
+            "fetched_at": ISO,
+            "points": points,
+        }
+    except Exception as e:
+        return {"source_url": url, "fetched_at": ISO, "error": str(e), "points": []}
+
+
+def build_rer_bilateral(bcra: dict, indec: dict, us_cpi: dict) -> dict:
+    fx_key = "fx_wholesale_ref"
+    fx_pts = sorted(bcra.get("series", {}).get(fx_key, {}).get("points", []), key=lambda x: x["date"])
+    if not fx_pts:
+        fx_pts = sorted(bcra.get("series", {}).get("fx_retail", {}).get("points", []), key=lambda x: x["date"])
+    ar_cpi = sorted(indec.get("series", {}).get("145.3_INGNACNAL_DICI_M_15", []), key=lambda x: x["date"])
+    us_map = {p["date"][:7]: p["value"] for p in us_cpi.get("points", [])}
+    ar_map = {p["date"][:7]: p["value"] for p in ar_cpi}
+    fx_map = {p["date"][:7]: p["value"] for p in fx_pts}
+    months = sorted(set(fx_map) & set(ar_map) & set(us_map))
+    months = [m for m in months if m >= "2017-01"]
+    raw = [{"date": m + "-01", "fx": fx_map[m], "us_cpi": us_map[m], "ar_cpi": ar_map[m]} for m in months]
+    base_m = "2023-12"
+    base_row = next((x for x in raw if x["date"].startswith(base_m)), raw[-1] if raw else None)
+    rer_pts = []
+    if base_row:
+        b_fx, b_us, b_ar = base_row["fx"], base_row["us_cpi"], base_row["ar_cpi"]
+        base_level = b_fx * b_us / b_ar
+        for row in raw:
+            level = row["fx"] * row["us_cpi"] / row["ar_cpi"]
+            rer_pts.append({"date": row["date"], "value": round(level / base_level * 100, 4)})
+    return {
+        "fetched_at": ISO,
+        "formula": "bilateral_rer = (official_fx * us_cpi / ar_cpi_index), base Dec 2023 = 100",
+        "interpretation": "Higher index = more depreciated / competitive vs USD.",
+        "base_month": base_m,
+        "sources": {
+            "fx": bcra.get("series", {}).get(fx_key, {}).get("source_url", ""),
+            "ar_cpi": "INDEC 145.3_INGNACNAL_DICI_M_15 via datos.gob.ar",
+            "us_cpi": us_cpi.get("source_url", ""),
+        },
+        "points": rer_pts,
+    }
+
+
 def imf_datamapper(codes: list[str], country: str = "ARG") -> dict:
     out = {}
     errors = []
@@ -325,6 +384,21 @@ def main() -> None:
 
     save("market.json", market)
 
+    us_cpi = fred_cpi_au_csl()
+    save("us_cpi.json", us_cpi)
+    track("fred_CPIAUCSL", bool(us_cpi.get("points")), us_cpi.get("error") or f"n={len(us_cpi.get('points', []))}")
+
+    rer = build_rer_bilateral(bcra, indec, us_cpi)
+    save("rer_bilateral.json", rer)
+    track("rer_bilateral", bool(rer.get("points")), f"n={len(rer.get('points', []))}")
+
+    # debt_payments.json is curated (documented schedules); refresh timestamps only if present
+    pay_path = DATA / "debt_payments.json"
+    if pay_path.exists():
+        pay = json.loads(pay_path.read_text(encoding="utf-8"))
+        pay["fetched_at"] = ISO
+        save("debt_payments.json", pay)
+
     # Manifest for frontend
     manifest = {
         "generated_at": ISO,
@@ -337,6 +411,9 @@ def main() -> None:
             "market.json",
             "facts.json",
             "sources.json",
+            "us_cpi.json",
+            "rer_bilateral.json",
+            "debt_payments.json",
         ],
     }
     save("manifest.json", manifest)

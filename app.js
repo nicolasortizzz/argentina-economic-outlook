@@ -72,6 +72,52 @@ function indec(id) {
 function lastPt(arr) {
   return arr.length ? arr[arr.length - 1] : null;
 }
+function imfDebtPoints() {
+  return S.data?.imf?.indicators?.GGXWDG_NGDP?.points || [];
+}
+function latestImfActualDebt() {
+  const cut = new Date().getFullYear() - 1;
+  const actual = imfDebtPoints().filter((p) => p.year <= cut);
+  if (!actual.length) return null;
+  const p = actual[actual.length - 1];
+  return { year: p.year, value: p.value };
+}
+function indecCpiYoySeries() {
+  const idx = indec("145.3_INGNACNAL_DICI_M_15");
+  const byMonth = new Map();
+  idx.forEach((p) => byMonth.set(p.date.slice(0, 7), p.value));
+  const months = [...byMonth.keys()].sort();
+  const out = [];
+  months.forEach((m) => {
+    const [y, mo] = m.split("-").map(Number);
+    const prev = `${y - 1}-${String(mo).padStart(2, "0")}`;
+    const v0 = byMonth.get(prev);
+    const v1 = byMonth.get(m);
+    if (v0 && v1) out.push({ date: `${m}-01`, value: (v1 / v0 - 1) * 100 });
+  });
+  return out;
+}
+function lastCpiYoy() {
+  const s = indecCpiYoySeries();
+  return s.length ? s[s.length - 1] : lastPt(pts("cpi_yoy_pct"));
+}
+function filterFrom(dates, series, from) {
+  return series.filter((p) => p.date >= from);
+}
+function mergeSeriesByDate(a, b) {
+  const dates = [...new Set(a.map((p) => p.date).concat(b.map((p) => p.date)))].filter((d) => d).sort();
+  const am = new Map(a.map((p) => [p.date, p.value]));
+  const bm = new Map(b.map((p) => [p.date, p.value]));
+  return dates.map((d) => ({ date: d, a: am.has(d) ? am.get(d) : null, b: bm.has(d) ? bm.get(d) : null }));
+}
+function numRange(vals) {
+  const v = vals.filter((x) => x != null && Number.isFinite(x));
+  if (!v.length) return undefined;
+  const lo = Math.min(...v);
+  const hi = Math.max(...v);
+  const pad = (hi - lo) * 0.05 || 1;
+  return [lo - pad, hi + pad];
+}
 function arsLine(usd) {
   if (usd == null || !S.fx) return "";
   const ars = usd * S.fx;
@@ -133,7 +179,7 @@ const PILLARS = [
   {
     id: "imf",
     title: "IMF Extended Fund Facility",
-    body: "Successive augmentations and reviews (2022 program carried into Milei era; April 2025 Board action on expanded access ~USD 20bn horizon per IMF press).",
+    body: "April 2025 IMF Board approved a new 48-month Extended Fund Facility (~USD 20bn, SDR 15.267bn), replacing the prior arrangement — reviews and disbursements under that program.",
     pro: "Bridge financing, policy discipline, and signal to bondholders; buys time for adjustment.",
     con: "Conditionality limits fiscal space; reputational cost of repeated programs; catalytic effect on private flows not guaranteed.",
   },
@@ -151,7 +197,7 @@ const DEFAULTS = [
 ];
 
 async function load() {
-  const files = ["bcra", "indec", "worldbank", "imf", "market", "facts", "sources", "manifest"];
+  const files = ["bcra", "indec", "worldbank", "imf", "market", "facts", "sources", "manifest", "us_cpi", "rer_bilateral", "debt_payments"];
   const parts = await Promise.all(
     files.map((n) => fetch(`data/${n}.json`).then((r) => (r.ok ? r.json() : {})))
   );
@@ -163,6 +209,8 @@ async function load() {
   $("#asof").textContent = gen ? gen.slice(0, 16).replace("T", " ") + " UTC" : S.fxDate;
   $("#foot").textContent = `Data refresh: python3 scripts/fetch_data.py · Official FX ${S.fx.toFixed(2)} ARS/USD (${S.fxDate})`;
   initUI();
+  snapshotDebtBaseline();
+  applyDebtSimDefaults();
   buildPillarNav();
   renderAll();
 }
@@ -244,14 +292,14 @@ function renderTab() {
 
 function tape() {
   const r = lastPt(pts("reserves_usd_mn"));
-  const cpi = lastPt(pts("cpi_yoy_pct"));
+  const cpi = lastCpiYoy();
   const risk = lastPt(S.data.market.country_risk?.points || []);
   const blue = blueSeries().at(-1);
   const items = [
     `Reserves ${r ? (r.value / 1000).toFixed(1) + "bn USD" : "n/a"}`,
     `FX official ${S.fx.toFixed(2)} ARS`,
     blue ? `Blue ${blue.value.toFixed(0)} ARS` : "",
-    cpi ? `CPI y/y ${cpi.value.toFixed(1)}%` : "",
+    cpi ? `CPI y/y ${cpi.value.toFixed(1)}% (INDEC ${cpi.date.slice(0, 7)})` : "",
     risk ? `Country risk ${risk.valor} bp` : "",
     `Program since Dec 2023`,
   ].filter(Boolean);
@@ -275,45 +323,60 @@ function officialSeries() {
 function tabOverview() {
   const res = lastPt(pts("reserves_usd_mn"));
   const cpiM = lastPt(indec("145.3_INGNACUAL_DICI_M_38"));
-  const cpiY = lastPt(pts("cpi_yoy_pct"));
+  const cpiY = lastCpiYoy();
   const pol = lastPt(pts("policy_rate"));
   const risk = lastPt((S.data.market.country_risk?.points || []).map((p) => ({ date: p.fecha, value: p.valor })));
-  const debt = lastPt((S.data.imf.indicators?.GGXWDG_NGDP?.points || []).map((p) => ({ date: String(p.year), value: p.value })));
+  const debtAct = latestImfActualDebt();
+  const debtProj = imfDebtPoints().find((p) => p.year === new Date().getFullYear());
   renderKpis($("#ovKpis"), [
     kpi("Intl. reserves", res ? res.value / 1000 : "—", res ? `USD bn · ${res.date}` : "", (v) => v.toFixed(1) + "bn"),
     kpi("CPI m/m (INDEC)", cpiM ? (cpiM.value * 100).toFixed(1) + "%" : "—", cpiM?.date || ""),
-    kpi("CPI y/y (BCRA)", cpiY ? cpiY.value.toFixed(1) + "%" : "—", cpiY?.date || ""),
+    kpi("CPI y/y (INDEC national)", cpiY ? cpiY.value.toFixed(1) + "%" : "—", cpiY ? `month ${cpiY.date.slice(0, 7)}` : ""),
     kpi("Policy rate (BCRA)", pol ? pol.value.toFixed(1) + "%" : "—", pol?.date || ""),
     kpi("Country risk", risk ? risk.value + " bp" : "—", risk?.date || ""),
-    kpi("Gross debt / GDP (IMF WEO)", debt ? debt.value.toFixed(0) + "%" : "—", debt?.date || "latest WEO"),
+    kpi(
+      "Gross debt / GDP (IMF actual)",
+      debtAct ? debtAct.value.toFixed(0) + "%" : "—",
+      debtAct ? `WEO ${debtAct.year}${debtProj ? ` · IMF projection ${debtProj.year}: ${debtProj.value.toFixed(0)}%` : ""}` : ""
+    ),
   ]);
   $("#ovSnap").innerHTML = `<p>President Javier Milei's administration (from <b>10 Dec 2023</b>) pursues fiscal consolidation, a restrictive monetary stance, and a managed FX transition toward liberalization, alongside structural reforms (DNU 70/2023, Ley Bases, RIGI) and continued IMF engagement.</p><p>This dashboard compares <b>pre- and post-inauguration</b> trajectories using only downloaded official statistics. Where labeled <span class="tag-estimate">Author's view</span>, content is analytical judgment—not a forecast from agencies.</p>`;
-  const facts = (S.data.facts.items || []).slice(0, 8);
-  $("#ovFacts").innerHTML = facts
-    .map(
-      (f) =>
-        `<a class="ev" href="${f.source_url}" target="_blank" rel="noopener"><span class="muted">${f.date || ""}</span><span class="badge">${f.category}</span><span>${f.title}</span></a>`
-    )
-    .join("");
-  const fx = officialSeries().slice(-400);
-  const resv = pts("reserves_usd_mn").slice(-400);
+  const facts = (S.data.facts.items || [])
+    .filter((f) => f.date)
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .slice(0, 10);
+  $("#ovFacts").innerHTML =
+    `<div class="feed timeline">` +
+    facts
+      .map(
+        (f) =>
+          `<a class="tl-item" href="${f.source_url}" target="_blank" rel="noopener"><span class="tl-date">${f.date}</span><span class="tl-body"><span class="tl-meta"><span class="badge">${f.category}</span>${f.label ? `<span class="tag-estimate">${f.label}</span>` : ""}</span><span class="tl-title">${f.title}</span><span class="tl-src">Source ↗</span></span></a>`
+      )
+      .join("") +
+    `</div>`;
+  const from = "2023-01-01";
+  const fx = filterFrom(from, officialSeries());
+  const resv = filterFrom(from, pts("reserves_usd_mn"));
+  const merged = mergeSeriesByDate(fx, resv);
+  const yRes = numRange(merged.map((p) => p.b));
+  const yFx = numRange(merged.map((p) => p.a));
   plot(
     "ovFxRes",
     [
-      { type: "scatter", name: "FX wholesale/ref", x: fx.map((p) => p.date), y: fx.map((p) => p.value), yaxis: "y2", line: { color: css("--ac"), width: 2 } },
-      { type: "scatter", name: "Reserves USD mn", x: resv.map((p) => p.date), y: resv.map((p) => p.value), line: { color: css("--ac2"), width: 2 } },
+      { type: "scatter", name: "Reserves (USD mn)", x: merged.map((p) => p.date), y: merged.map((p) => p.b), line: { color: css("--ac2"), width: 2 }, connectgaps: false },
+      { type: "scatter", name: "FX wholesale/ref", x: merged.map((p) => p.date), y: merged.map((p) => p.a), yaxis: "y2", line: { color: css("--ac"), width: 2 }, connectgaps: false },
     ],
     {
-      shapes: mileiShape(),
-      yaxis: { title: "Reserves (USD mn)" },
-      yaxis2: { overlaying: "y", side: "right", title: "ARS/USD" },
+      margin: { l: 58, r: 62, t: 10, b: 40 },
+      yaxis: { title: "Reserves (USD mn)", automargin: true, titlefont: { size: 11 }, range: yRes },
+      yaxis2: { overlaying: "y", side: "right", title: "ARS/USD", automargin: true, titlefont: { size: 11 }, range: yFx },
       hovermode: "x unified",
     }
   );
 }
 
-function mileiShape() {
-  return [{ type: "line", x0: MILEI, x1: MILEI, y0: 0, y1: 1, yref: "paper", line: { dash: "dot", color: css("--mu") } }];
+function mileiShape(xref = "x") {
+  return [{ type: "line", x0: MILEI, x1: MILEI, y0: 0, y1: 1, xref, yref: "paper", line: { dash: "dot", color: css("--mu") } }];
 }
 
 function tabHistory() {
@@ -409,10 +472,43 @@ function tabResults() {
     shapes: mileiShape(),
     yaxis: { title: "ARS mn" },
   });
-  const cy = pts("cpi_yoy_pct").filter((p) => p.date >= "2018-01-01");
+  const cy = indecCpiYoySeries().filter((p) => p.date >= "2018-01-01");
   plot("resDisinf", [{ type: "scatter", x: cy.map((p) => p.date), y: cy.map((p) => p.value), line: { color: css("--ac"), width: 2 }, fill: "tozeroy" }], {
     shapes: mileiShape(),
     yaxis: { title: "% y/y" },
+  });
+}
+
+const DEBT_SIM_BASE = { d0: 85, r: 5, g: 3, pb: 1.5, fxShare: 50, realDep: 5, T: 10 };
+let DEBT_BASELINE = { ...DEBT_SIM_BASE };
+
+function snapshotDebtBaseline() {
+  const act = latestImfActualDebt();
+  DEBT_BASELINE = {
+    d0: act ? Math.round(act.value) : DEBT_SIM_BASE.d0,
+    r: DEBT_SIM_BASE.r,
+    g: DEBT_SIM_BASE.g,
+    pb: DEBT_SIM_BASE.pb,
+    fxShare: DEBT_SIM_BASE.fxShare,
+    realDep: DEBT_SIM_BASE.realDep,
+  };
+  DEBT_SIM_BASE.d0 = DEBT_BASELINE.d0;
+  const d = latestImfActualDebt();
+  if (d) {
+    SCEN.base.debt = Math.round(d.value);
+    SCEN.bear.debt = Math.round(d.value * 1.15);
+    SCEN.bull.debt = Math.round(d.value * 0.85);
+  }
+}
+
+function applyDebtSimDefaults() {
+  const d0 = document.getElementById("d0");
+  if (!d0) return;
+  Object.entries({ d0: DEBT_SIM_BASE.d0, r: DEBT_SIM_BASE.r, g: DEBT_SIM_BASE.g, pb: DEBT_SIM_BASE.pb, fxShare: DEBT_SIM_BASE.fxShare, realDep: DEBT_SIM_BASE.realDep, T: DEBT_SIM_BASE.T }).forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    const lab = document.getElementById(id + "Val");
+    if (el) el.value = v;
+    if (lab) lab.textContent = v;
   });
 }
 
@@ -420,12 +516,13 @@ function initDebtSim() {
   const box = $("#debtSliders");
   if (!box) return;
   const defs = [
-    { id: "d0", l: "Initial debt / GDP", min: 20, max: 200, step: 1, v: 90 },
-    { id: "r", l: "Real interest rate r (%)", min: -5, max: 25, step: 0.25, v: 8 },
-    { id: "g", l: "Real GDP growth g (%)", min: -10, max: 10, step: 0.25, v: 2 },
-    { id: "pb", l: "Primary balance / GDP (%)", min: -5, max: 8, step: 0.1, v: 2 },
-    { id: "fx", l: "FX depreciation share (pp debt)", min: 0, max: 15, step: 0.25, v: 3 },
-    { id: "T", l: "Horizon (years)", min: 5, max: 15, step: 1, v: 10 },
+    { id: "d0", l: "Initial debt / GDP (%)", min: 20, max: 200, step: 1, v: DEBT_SIM_BASE.d0 },
+    { id: "r", l: "Real interest rate r (%)", min: -5, max: 25, step: 0.25, v: DEBT_SIM_BASE.r },
+    { id: "g", l: "Real GDP growth g (%)", min: -10, max: 10, step: 0.25, v: DEBT_SIM_BASE.g },
+    { id: "pb", l: "Primary balance / GDP (%)", min: -5, max: 8, step: 0.1, v: DEBT_SIM_BASE.pb },
+    { id: "fxShare", l: "Share of debt in foreign currency (%)", min: 0, max: 100, step: 1, v: DEBT_SIM_BASE.fxShare },
+    { id: "realDep", l: "Real FX depreciation on FX leg (%/yr)", min: 0, max: 30, step: 0.25, v: DEBT_SIM_BASE.realDep },
+    { id: "T", l: "Horizon (years)", min: 5, max: 15, step: 1, v: DEBT_SIM_BASE.T },
   ];
   box.innerHTML = defs
     .map(
@@ -442,61 +539,65 @@ function initDebtSim() {
   });
 }
 
+function debtPathParams(d0p, rp, gp, pbp, fxSharep, realDepp, T) {
+  const path = [];
+  let d = d0p;
+  const fxLeg = (fxSharep / 100) * (realDepp / 100);
+  for (let t = 0; t <= T; t++) {
+    path.push({ t, d: d * 100 });
+    const effR = rp + fxLeg;
+    d = d * (1 + effR) / (1 + gp) - pbp;
+    if (d < 0) d = 0;
+  }
+  return path;
+}
+
 function debtSim() {
   const d0 = +$("#d0").value / 100;
   const r = +$("#r").value / 100;
   const g = +$("#g").value / 100;
   const pb = +$("#pb").value / 100;
-  const fx = +$("#fx").value / 100;
+  const fxShare = +$("#fxShare").value;
+  const realDep = +$("#realDep").value;
   const T = +$("#T").value;
-  const path = [];
-  let d = d0;
-  for (let t = 0; t <= T; t++) {
-    path.push({ t, d: d * 100 });
-    const effR = r + fx;
-    d = d * (1 + effR) / (1 + g) - pb;
-    if (d < 0) d = 0;
-  }
+  const pbStar = d0 * ((r - g) / (1 + g)) * 100;
+  const pbEl = $("#debtPbStar");
+  if (pbEl)
+    pbEl.innerHTML = `Debt-stabilizing primary balance <b>pb*</b> = d×(r−g)/(1+g) ≈ <b>${pbStar.toFixed(2)}%</b> of GDP at current sliders (holding FX valuation leg fixed).`;
+  const path = debtPathParams(d0, r, g, pb, fxShare, realDep, T);
+  const base = debtPathParams(
+    DEBT_BASELINE.d0 / 100,
+    DEBT_BASELINE.r / 100,
+    DEBT_BASELINE.g / 100,
+    DEBT_BASELINE.pb / 100,
+    DEBT_BASELINE.fxShare,
+    DEBT_BASELINE.realDep,
+    T
+  );
   plot(
     "debtOut",
-    [{ type: "scatter", mode: "lines+markers", x: path.map((p) => p.t), y: path.map((p) => p.d), line: { color: css("--ac"), width: 3 } }],
-    { xaxis: { title: "Years" }, yaxis: { title: "Debt / GDP %" } }
+    [
+      { type: "scatter", mode: "lines", name: "Your settings", x: path.map((p) => p.t), y: path.map((p) => p.d), line: { color: css("--ac"), width: 3 } },
+      { type: "scatter", mode: "lines", name: "Baseline defaults", x: base.map((p) => p.t), y: base.map((p) => p.d), line: { color: css("--mu"), width: 2, dash: "dot" } },
+    ],
+    { xaxis: { title: "Years" }, yaxis: { title: "Debt / GDP %" }, legend: { orientation: "h" } }
   );
 }
 
 function tabSustain() {
   debtSim();
-  const ipc = indec("145.3_INGNACNAL_DICI_M_15");
-  const fx = officialSeries();
-  const us = S.data.worldbank.indicators?.inflation_cpi?.by_country?.USA || [];
-  if (ipc.length && fx.length) {
-    const ipM = new Map(ipc.map((p) => [p.date.slice(0, 7), p.value]));
-    const ptsR = fx
-      .map((p) => {
-        const k = p.date.slice(0, 7);
-        const idx = ipM.get(k);
-        return idx ? { date: p.date, value: p.value / idx } : null;
-      })
-      .filter(Boolean)
-      .slice(-240);
-    plot("reerChart", [{ type: "scatter", x: ptsR.map((p) => p.date), y: ptsR.map((p) => p.value), line: { color: css("--ac2") } }], {
-      shapes: mileiShape(),
-      yaxis: { title: "Nominal FX / CPI index (proxy)" },
+  const rerPts = (S.data.rer_bilateral?.points || []).filter((p) => p.date >= "2017-01-01");
+  if (rerPts.length) {
+    plot("reerChart", [{ type: "scatter", name: "RER (Dec 2023=100)", x: rerPts.map((p) => p.date), y: rerPts.map((p) => p.value), line: { color: css("--ac2"), width: 2 } }], {
+      shapes: [{ type: "line", x0: "2023-12-01", x1: "2023-12-01", y0: 0, y1: 1, yref: "paper", line: { dash: "dot", color: css("--mu") } }],
+      yaxis: { title: "Index (100 = Dec 2023)" },
     });
   } else {
     const el = $("#reerChart");
     el.classList.remove("sk");
-    el.innerHTML = '<p class="muted">Insufficient CPI index series for REER proxy.</p>';
+    el.innerHTML = '<p class="muted">Run scripts/fetch_data.py to build data/rer_bilateral.json.</p>';
   }
-  const pay = (S.data.facts.items || []).filter((f) => f.category === "external" || f.id.includes("debt"));
-  $("#payCal").innerHTML =
-    `<p class="small muted">Illustrative calendar — confirm amounts with Ministry of Economy debt reports.</p>` +
-    pay
-      .map(
-        (f) =>
-          `<div class="ev"><span class="muted">${f.date || ""}</span><span class="badge">${f.label || "documented"}</span><span>${f.title}: ${f.text.slice(0, 120)}…</span></div>`
-      )
-      .join("");
+  renderPaymentsCalendar();
   const debtPts = S.data.imf.indicators?.GGXWDG_NGDP?.points || [];
   const caPts = S.data.imf.indicators?.BCA_NGDPD?.points || [];
   plot(
@@ -563,12 +664,56 @@ function tabRisks() {
 }
 
 const CMP = [
-  { code: "ARG", name: "Argentina", t0: 1989 },
-  { code: "ISR", name: "Israel", t0: 1985 },
-  { code: "PER", name: "Peru", t0: 1990 },
-  { code: "BRA", name: "Brazil", t0: 1994 },
-  { code: "CHL", name: "Chile", t0: 1985 },
+  { code: "ISR", name: "Israel 1985", t0: 1985 },
+  { code: "ARG", name: "Argentina 1991", t0: 1991 },
+  { code: "BRA", name: "Brazil 1994", t0: 1994 },
+  { code: "PER", name: "Peru 1990", t0: 1990 },
 ];
+
+function renderPaymentsCalendar() {
+  const pay = S.data.debt_payments?.items || [];
+  const res = lastPt(pts("reserves_usd_mn"));
+  const resBn = res ? res.value / 1000 : null;
+  const documented = pay.filter((p) => p.documented && p.total_mn);
+  const totalDoc = documented.reduce((s, p) => s + p.total_mn, 0);
+  const rows = pay
+    .map(
+      (p) =>
+        `<tr><td>${p.date}</td><td class="wrap">${p.type}</td><td>${p.total_mn != null ? p.total_mn.toLocaleString() : "—"}</td><td>${p.label || (p.documented ? "Documented" : "—")}</td><td class="wrap small"><a href="${p.source_url}" target="_blank" rel="noopener">source</a> · ${p.detail || ""}</td></tr>`
+    )
+    .join("");
+  $("#payCal").innerHTML =
+    `<p class="small muted">Sovereign FX debt service 2026–2027 (Bonares/Globales Jan 9 & Jul 9; IMF net service where noted). Reserves (gross, BCRA): <b>${resBn != null ? resBn.toFixed(1) + " bn USD" : "n/a"}</b> (${res?.date || ""}). Documented bond payments listed: <b>USD ${totalDoc.toLocaleString()} mn</b>.</p>` +
+    `<div class="tablewrap pay-wrap"><table><thead><tr><th>Date</th><th>Instrument</th><th>USD mn</th><th>Status</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table></div>` +
+    `<div id="payChart" class="chart sk" style="height:260px;margin-top:12px"></div>`;
+  const chartPts = pay.filter((p) => p.total_mn && /^\d{4}-\d{2}-\d{2}/.test(p.date));
+  const resMn = resBn ? Math.round(resBn * 1000) : null;
+  plot(
+    "payChart",
+    [
+      {
+        type: "bar",
+        name: "FX debt service",
+        x: chartPts.map((p) => p.date),
+        y: chartPts.map((p) => p.total_mn),
+        marker: { color: chartPts.map((p) => (p.label === "Estimate" ? "#f59e0b" : css("--dn"))) },
+      },
+      ...(resMn
+        ? [
+            {
+              type: "scatter",
+              mode: "lines",
+              name: `Gross reserves (${resMn.toLocaleString()} mn)`,
+              x: chartPts.map((p) => p.date),
+              y: chartPts.map(() => resMn),
+              line: { color: css("--ac2"), dash: "dash", width: 2 },
+            },
+          ]
+        : []),
+    ],
+    { yaxis: { title: "USD mn" }, barmode: "group", legend: { orientation: "h" } }
+  );
+}
 
 function tabCmp() {
   const wb = S.data.worldbank.indicators?.inflation_cpi?.by_country || {};
@@ -680,9 +825,12 @@ function runMC() {
     ],
     { yaxis: { title: "CPI % y/y (sim.)" } }
   );
+  const medDebtEnd = pct(debtPaths, 0.5)[h];
+  const medInflEnd = pct(inflPaths, 0.5)[h];
+  S.mcSummary = { probs, medDebtEnd, medInflEnd, horizon: h };
   $("#scenTbl").innerHTML = `<table><thead><tr><th>Scenario</th><th>Weight</th><th>Growth mean</th><th>Vol</th><th>Debt start</th></tr></thead><tbody>${["bear", "base", "bull"]
-    .map((k) => `<tr><td>${k}</td><td>${(SCEN[k].p * 100).toFixed(0)}%</td><td>${SCEN[k].mu}%</td><td>${SCEN[k].vol}</td><td>${SCEN[k].debt}%</td></tr>`)
-    .join("")}</tbody></table>`;
+    .map((k) => `<tr><td>${k}</td><td>${(probs[k] * 100).toFixed(0)}%</td><td>${SCEN[k].mu}%</td><td>${SCEN[k].vol}</td><td>${SCEN[k].debt}%</td></tr>`)
+    .join("")}</tbody></table><p class="small muted">Median simulated year ${h}: debt/GDP <b>${medDebtEnd.toFixed(1)}%</b> · inflation <b>${medInflEnd.toFixed(1)}%</b> (normalized weights).</p>`;
 }
 
 function tabScenarios() {
@@ -734,8 +882,14 @@ function tabConclusion() {
   lines.push(`World Bank — ${S.data.worldbank?.fetched_at || ""}`);
   lines.push(`IMF DataMapper — ${S.data.imf?.fetched_at || ""}`);
   lines.push(`Bluelytics / argentinadatos — ${S.data.market?.fetched_at || ""}`);
-  lines.push(`Documented facts — data/facts.json`);
-  $("#sourcesList").innerHTML = "<ul>" + lines.map((l) => `<li>${l}</li>`).join("") + "</ul>";
+  lines.push(`US CPI (FRED CPIAUCSL) — ${S.data.us_cpi?.fetched_at || ""}`);
+  lines.push(`Bilateral RER — ${S.data.rer_bilateral?.fetched_at || ""}`);
+  lines.push(`Debt payment calendar — ${S.data.debt_payments?.fetched_at || ""}`);
+  lines.push(`Documented facts — data/facts.json (${S.data.facts?.fetched_at || ""})`);
+  $("#sourcesList").innerHTML =
+    "<ul>" +
+    lines.map((l) => `<li>${l}</li>`).join("") +
+    "</ul><p class='muted small'>CPI y/y KPI uses INDEC national index (12-month change), consistent with INDEC monthly CPI. IMF gross debt KPI uses latest WEO <em>actual</em> year; forward years are IMF projections.</p>";
 }
 
 load().catch((e) => {
