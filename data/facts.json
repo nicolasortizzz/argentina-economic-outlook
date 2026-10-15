@@ -1,0 +1,119 @@
+{
+  "fetched_at": "2026-10-15T02:20:00Z",
+  "items": [
+    {
+      "id": "milei_inauguration",
+      "category": "political",
+      "title": "Javier Milei sworn in as President",
+      "date": "2023-12-10",
+      "text": "Javier Milei took office as President of Argentina on 10 December 2023, launching an orthodox fiscal-monetary adjustment program.",
+      "source_url": "https://www.casarosada.gob.ar/",
+      "documented": true
+    },
+    {
+      "id": "dnu_70_2023",
+      "category": "reform",
+      "title": "DNU 70/2023 (mega-decree)",
+      "date": "2023-12-21",
+      "text": "Emergency decree N° 70/2023 introduced broad deregulation and state reform measures; partially challenged in courts and Congress.",
+      "source_url": "https://www.boletinoficial.gob.ar/",
+      "documented": true
+    },
+    {
+      "id": "ley_bases",
+      "category": "reform",
+      "title": "Ley Bases y Marco Fiscal",
+      "date": "2024-06-12",
+      "text": "Congress approved the Ley Bases (Law 27.742) after months of debate, enabling fiscal framework, privatizations, and delegated powers.",
+      "source_url": "https://www.argentina.gob.ar/normativa/nacional/ley-27742-2024-06-12/1",
+      "documented": true
+    },
+    {
+      "id": "rigi",
+      "category": "reform",
+      "title": "RIGI (Régimen de Incentivo para Grandes Inversiones)",
+      "date": "2024-07-08",
+      "text": "Large Investment Incentive Regime enacted via Ley Bases to attract long-term capital projects with tax and customs benefits.",
+      "source_url": "https://www.argentina.gob.ar/economia/rigi",
+      "documented": true
+    },
+    {
+      "id": "imf_eff_april_2025",
+      "category": "external",
+      "title": "IMF Extended Fund Facility — April 2025 augmentation",
+      "date": "2025-04-11",
+      "text": "IMF Executive Board approved an augmentation of access under the Extended Fund Facility; press materials reference total access on the order of USD 20 billion over the program horizon (staff-level and Board documentation).",
+      "source_url": "https://www.imf.org/en/News/Articles/2025/04/11/pr25123-argentina-imf-executive-board-completes-review-under-extended-arrangement",
+      "documented": true
+    },
+    {
+      "id": "fx_band_april_2025",
+      "category": "monetary",
+      "title": "FX band regime (April 2025)",
+      "date": "2025-04-14",
+      "text": "BCRA announced a widening of the official USD/ARS trading band and a slower crawl, moving from a tight crawling peg toward a band with ~1% monthly crawl (policy communication April 2025).",
+      "source_url": "https://www.bcra.gob.ar/",
+      "documented": true,
+      "label": "Estimate",
+      "note": "Exact band parameters should be cross-checked against BCRA communiqués; crawl cited as policy shift in official statements."
+    },
+    {
+      "id": "fx_crawl_reduction",
+      "category": "monetary",
+      "title": "Crawling peg adjustment (2% to 1%)",
+      "date": "2025-01-01",
+      "text": "Official FX policy reduced the monthly crawl from about 2% toward 1% as part of disinflation strategy (timeline per BCRA/market commentary).",
+      "source_url": "https://www.bcra.gob.ar/",
+      "documented": true,
+      "label": "Estimate"
+    },
+    {
+      "id": "midterms_oct_2025",
+      "category": "political",
+      "title": "Legislative elections (October 2025)",
+      "date": "2025-10-26",
+      "text": "National legislative elections held 26 October 2025 (half the Chamber of Deputies and one-third of the Senate). Official results published by Cámara Nacional Electoral / Interior.",
+      "source_url": "https://www.electoral.gob.ar/",
+      "documented": true,
+      "note": "Seat counts in the dashboard narrative follow CNE releases; verify final tally on electoral.gob.ar."
+    },
+    {
+      "id": "poverty_indec_2024_h1",
+      "category": "social",
+      "title": "Urban poverty (INDEC, 31 agglomerates)",
+      "date": "2024-09-26",
+      "text": "INDEC reported 52.9% poverty and 18.1% extreme poverty in H1 2024 (31 urban agglomerates, EPH-based methodology).",
+      "source_url": "https://www.indec.gob.ar/",
+      "documented": true
+    },
+    {
+      "id": "defaults_timeline",
+      "category": "history",
+      "title": "Sovereign default episodes (selected)",
+      "date": null,
+      "text": "Argentina experienced repeated sovereign debt crises and restructurings including 1827, 1890, 1951, 1982, 1989, 2001, 2014 (selective), and 2020.",
+      "source_url": "https://www.worldbank.org/",
+      "documented": true
+    },
+    {
+      "id": "vaca_muerta",
+      "category": "sector",
+      "title": "Vaca Muerta shale",
+      "date": null,
+      "text": "Neuquén Basin unconventional oil & gas production is a structural export and FX earner; pipeline capacity (e.g. Presidente Néstor Kirchner gas pipeline stages) shapes export potential.",
+      "source_url": "https://www.energia.gob.ar/",
+      "documented": true
+    },
+    {
+      "id": "debt_maturities_2025",
+      "category": "external",
+      "title": "Large external debt service (calendar)",
+      "date": "2025-01-01",
+      "text": "IMF repurchases, global bond coupons, and private amortizations concentrate in 2025–2027; exact amounts from Ministry of Economy debt reports.",
+      "source_url": "https://www.economia.gob.ar/",
+      "documented": true,
+      "label": "Estimate",
+      "note": "Payment calendar entries in the site are illustrative unless tied to a published schedule."
+    }
+  ]
+}

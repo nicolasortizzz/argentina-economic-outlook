@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-10-15T02:23:27Z",
+  "files": [
+    "bcra.json",
+    "bcra_catalog.json",
+    "indec.json",
+    "worldbank.json",
+    "imf.json",
+    "market.json",
+    "facts.json",
+    "sources.json"
+  ]
+}

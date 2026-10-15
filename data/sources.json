@@ -1,0 +1,132 @@
+{
+  "fetched_at": "2026-10-15T02:23:27Z",
+  "ok": [
+    {
+      "name": "bcra_catalog",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_reserves_usd_mn",
+      "detail": "n=7577",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_fx_retail",
+      "detail": "n=3984",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_fx_wholesale_ref",
+      "detail": "n=6033",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_monetary_base",
+      "detail": "n=7577",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_cpi_monthly_pct",
+      "detail": "n=1004",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_cpi_yoy_pct",
+      "detail": "n=993",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_policy_rate",
+      "detail": "n=2329",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bcra_policy_rate_upper",
+      "detail": "n=1325",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "indec_series",
+      "detail": "143.3_NO_PR_2004_A_31; 158.1_REPTE_0_0_5; 181.1_UNCTAD_TOTNES_0_A_26",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_gdp_growth",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_inflation_cpi",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_gov_debt_gdp",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_gini",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_poverty_headcount",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_reer",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "wb_us_cpi",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "imf_NGDP_RPCH",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "imf_PCPIPCH",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "imf_GGXWDG_NGDP",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "imf_BCA_NGDPD",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "bluelytics",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "country_risk",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    },
+    {
+      "name": "dolarapi",
+      "detail": "",
+      "at": "2026-10-15T02:23:27Z"
+    }
+  ],
+  "failed": [
+    {
+      "name": "indec_poverty",
+      "detail": "no series id found",
+      "at": "2026-10-15T02:23:27Z"
+    }
+  ]
+}

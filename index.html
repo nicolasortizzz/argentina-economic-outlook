@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Argentina Economic Outlook — Nicolas Ortiz</title>
+<meta name="description" content="Interactive analysis of Argentina's economic viability and President Javier Milei's economic program (Dec 2023 onward). Real data from BCRA, INDEC, World Bank, IMF.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%2375acff%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">AR</div><div><h1>Nicolas Ortiz — Economist | Financial &amp; Data Analyst</h1><p class="sub">Argentina Economic Outlook · data as of <span id="asof">loading…</span></p></div></div>
+  <div class="actions">
+    <button id="ccy" class="chip" title="Toggle USD / ARS display">USD</button>
+    <button id="theme" class="icon" title="Toggle theme">◐</button>
+    <a class="icon" href="https://github.com/nicolasortizzz" target="_blank" rel="noopener" title="GitHub">GH</a>
+    <a class="icon" href="https://www.linkedin.com/in/nicolas-ortizzz/" target="_blank" rel="noopener" title="LinkedIn">in</a>
+  </div>
+</header>
+<div id="ticker-tape" class="tape"><div class="tape-inner" id="tape"></div></div>
+<nav class="tabs" id="tabs">
+  <button data-tab="overview" class="active">Overview</button>
+  <button data-tab="history">Historical context</button>
+  <button data-tab="pillars">Program pillars</button>
+  <button data-tab="results">Results</button>
+  <button data-tab="sustainability">Sustainability</button>
+  <button data-tab="sectoral">Sectoral</button>
+  <button data-tab="social">Social impact</button>
+  <button data-tab="risks">Political economy</button>
+  <button data-tab="comparisons">International</button>
+  <button data-tab="scenarios">Scenarios</button>
+  <button data-tab="scorecard">Scorecard</button>
+  <button data-tab="conclusion">Conclusion</button>
+  <span class="ink" id="ink"></span>
+</nav>
+<main>
+<section id="overview" class="tab active">
+  <div class="kpis" id="ovKpis"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Program snapshot</h3><div id="ovSnap" class="prose"></div></div>
+    <div class="card"><h3>Key policy milestones</h3><div id="ovFacts" class="feed"></div></div>
+  </div>
+  <div class="card"><div class="card-h"><h3>Official FX &amp; reserves (recent)</h3></div><div id="ovFxRes" class="chart tall sk"></div></div>
+</section>
+
+<section id="history" class="tab">
+  <div class="card"><div class="card-h"><h3>Consumer inflation (annual %, log scale) — World Bank</h3></div><div id="histInfl" class="chart xtall sk"></div></div>
+  <div class="grid g2">
+    <div class="card"><h3>Sovereign stress timeline (selected)</h3><div id="histTL" class="timeline"></div></div>
+    <div class="card"><h3>Structural context</h3><div id="histProse" class="prose"></div></div>
+  </div>
+</section>
+
+<section id="pillars" class="tab">
+  <div class="card"><p class="muted small">Each pillar presents <b>supporters' arguments</b> and <b>critiques</b> in parallel — not an endorsement of either view.</p>
+    <div class="pillar-nav seg" id="pillarSeg"></div>
+    <h2 id="pillarTitle"></h2>
+    <div id="pillarBody" class="prose"></div>
+    <div class="debate" id="pillarDebate"></div>
+  </div>
+</section>
+
+<section id="results" class="tab">
+  <p class="muted small" style="margin:0 0 12px">Vertical marker: <b>10 Dec 2023</b> (Milei inauguration). Before/after comparisons use the same units as source agencies.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Monthly CPI (% m/m, INDEC national)</h3><div id="resCpi" class="chart sk"></div></div>
+    <div class="card"><h3>International reserves (USD mn, BCRA)</h3><div id="resRes" class="chart sk"></div></div>
+    <div class="card"><h3>FX official vs parallel &amp; gap (%)</h3><div id="resFx" class="chart tall sk"></div></div>
+    <div class="card"><h3>Country risk (EMBI+, basis points)</h3><div id="resRisk" class="chart sk"></div></div>
+    <div class="card"><h3>EMAE — monthly % change (INDEC)</h3><div id="resEmae" class="chart sk"></div></div>
+    <div class="card"><h3>Primary fiscal balance (ARS mn, Ministry via datos.gob.ar)</h3><div id="resFiscal" class="chart sk"></div></div>
+  </div>
+  <div class="card"><h3>Disinflation path (BCRA CPI interannual %)</h3><div id="resDisinf" class="chart sk"></div></div>
+</section>
+
+<section id="sustainability" class="tab">
+  <div class="grid g2">
+    <div class="card"><div class="card-h"><h3>Debt dynamics simulator</h3><span class="muted small">d<sub>t+1</sub> = d<sub>t</sub>(1+r)/(1+g) − pb</span></div>
+      <div id="debtSliders" class="vsliders"></div>
+      <div id="debtOut" class="chart sk"></div>
+    </div>
+    <div class="card"><h3>Real exchange rate (proxy)</h3><p class="muted small">Official ARS/USD vs US CPI (World Bank) and Argentina CPI index (INDEC) — illustrative real appreciation/depreciation.</p><div id="reerChart" class="chart tall sk"></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h3>Reserves vs external payments calendar</h3><div id="payCal"></div></div>
+    <div class="card"><h3>IMF WEO — gross debt &amp; current account (% GDP)</h3><div id="imfDebt" class="chart sk"></div></div>
+  </div>
+</section>
+
+<section id="sectoral" class="tab">
+  <div class="grid g2">
+    <div class="card"><h3>Goods exports (datos.gob.ar / trade)</h3><div id="secTrade" class="chart sk"></div></div>
+    <div class="card"><h3>Energy &amp; mining — documented facts</h3><div id="secEnergy" class="prose"></div></div>
+  </div>
+  <div class="card"><h3>Agro &amp; lithium — structural role</h3><div id="secAgro" class="prose"></div></div>
+</section>
+
+<section id="social" class="tab">
+  <div class="kpis" id="socKpis"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Unemployment rate (%)</h3><div id="socUnemp" class="chart sk"></div></div>
+    <div class="card"><h3>Inequality &amp; poverty (World Bank / INDEC facts)</h3><div id="socPov" class="chart sk"></div></div>
+  </div>
+  <div class="card"><h3>Social trade-offs (balanced view)</h3><div id="socProse" class="prose"></div></div>
+</section>
+
+<section id="risks" class="tab">
+  <div class="card"><h3>Political economy risk map</h3><div id="riskGrid" class="grid g3"></div></div>
+  <div class="card"><h3>Transmission channels</h3><div id="riskChart" class="chart tall sk"></div></div>
+</section>
+
+<section id="comparisons" class="tab">
+  <div class="card"><h3>Inflation paths indexed to t₀ = 100 (annual CPI %, World Bank)</h3><div id="cmpChart" class="chart xtall sk"></div></div>
+  <div class="card"><div class="tablewrap"><table id="cmpTable"></table></div></div>
+</section>
+
+<section id="scenarios" class="tab">
+  <p class="muted small">Scenario probabilities and volatilities are <span class="tag-estimate">Author's view</span> — adjustable below. Monte Carlo: 5,000 simulated paths.</p>
+  <div class="grid g2">
+    <div class="card"><h3>Scenario weights</h3><div id="scenSliders" class="vsliders"></div><div id="scenTbl" class="tablewrap"></div></div>
+    <div class="card"><h3>Debt / GDP fan chart (simulated)</h3><div id="mcDebt" class="chart tall sk"></div></div>
+  </div>
+  <div class="card"><h3>Inflation fan chart (simulated annual %)</h3><div id="mcInfl" class="chart sk"></div></div>
+</section>
+
+<section id="scorecard" class="tab">
+  <div class="grid g2">
+    <div class="card"><h3>Viability dimensions (1–10) <span class="tag-estimate">Author's view</span></h3><div id="scoreBars" class="scores"></div></div>
+    <div class="card"><h3>Radar</h3><div id="scoreRadar" class="chart sk"></div></div>
+  </div>
+  <div class="card"><h3>Rationale by dimension</h3><div id="scoreText" class="prose"></div></div>
+</section>
+
+<section id="conclusion" class="tab">
+  <div class="card"><h2>Conclusion</h2><div id="conclText" class="prose"></div></div>
+  <div class="card"><h2>Sources &amp; methodology</h2><div id="sourcesList" class="prose small"></div></div>
+  <div class="card"><h2>Disclaimer</h2><p class="prose">This site is an educational research dashboard. It is <b>not</b> investment advice, legal advice, or political campaigning. Data come from public APIs and documented official releases; errors and lags may occur. Estimates and scenario weights are clearly labeled. Verify critical figures with primary sources before decisions.</p></div>
+</section>
+</main>
+<footer><p id="foot"></p></footer>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

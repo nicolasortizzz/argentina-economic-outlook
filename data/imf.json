@@ -1,0 +1,727 @@
+{
+  "fetched_at": "2026-10-15T02:23:27Z",
+  "country": "ARG",
+  "errors": [],
+  "indicators": {
+    "NGDP_RPCH": {
+      "source_url": "https://www.imf.org/external/datamapper/api/v1/NGDP_RPCH/ARG",
+      "points": [
+        {
+          "year": 1980,
+          "value": 0.7
+        },
+        {
+          "year": 1981,
+          "value": -5.7
+        },
+        {
+          "year": 1982,
+          "value": -3.1
+        },
+        {
+          "year": 1983,
+          "value": 3.7
+        },
+        {
+          "year": 1984,
+          "value": 2
+        },
+        {
+          "year": 1985,
+          "value": -7
+        },
+        {
+          "year": 1986,
+          "value": 7.1
+        },
+        {
+          "year": 1987,
+          "value": 2.5
+        },
+        {
+          "year": 1988,
+          "value": -2
+        },
+        {
+          "year": 1989,
+          "value": -7
+        },
+        {
+          "year": 1990,
+          "value": -1.3
+        },
+        {
+          "year": 1991,
+          "value": 10.5
+        },
+        {
+          "year": 1992,
+          "value": 10.3
+        },
+        {
+          "year": 1993,
+          "value": 6.3
+        },
+        {
+          "year": 1994,
+          "value": 5.8
+        },
+        {
+          "year": 1995,
+          "value": -2.8
+        },
+        {
+          "year": 1996,
+          "value": 5.5
+        },
+        {
+          "year": 1997,
+          "value": 8.1
+        },
+        {
+          "year": 1998,
+          "value": 3.9
+        },
+        {
+          "year": 1999,
+          "value": -3.4
+        },
+        {
+          "year": 2000,
+          "value": -0.8
+        },
+        {
+          "year": 2001,
+          "value": -4.4
+        },
+        {
+          "year": 2002,
+          "value": -10.9
+        },
+        {
+          "year": 2003,
+          "value": 9
+        },
+        {
+          "year": 2004,
+          "value": 8.9
+        },
+        {
+          "year": 2005,
+          "value": 8.9
+        },
+        {
+          "year": 2006,
+          "value": 8
+        },
+        {
+          "year": 2007,
+          "value": 9
+        },
+        {
+          "year": 2008,
+          "value": 4.1
+        },
+        {
+          "year": 2009,
+          "value": -5.9
+        },
+        {
+          "year": 2010,
+          "value": 10.1
+        },
+        {
+          "year": 2011,
+          "value": 6
+        },
+        {
+          "year": 2012,
+          "value": -1
+        },
+        {
+          "year": 2013,
+          "value": 2.4
+        },
+        {
+          "year": 2014,
+          "value": -2.5
+        },
+        {
+          "year": 2015,
+          "value": 2.7
+        },
+        {
+          "year": 2016,
+          "value": -2.1
+        },
+        {
+          "year": 2017,
+          "value": 2.8
+        },
+        {
+          "year": 2018,
+          "value": -2.6
+        },
+        {
+          "year": 2019,
+          "value": -2
+        },
+        {
+          "year": 2020,
+          "value": -9.9
+        },
+        {
+          "year": 2021,
+          "value": 10.4
+        },
+        {
+          "year": 2022,
+          "value": 6
+        },
+        {
+          "year": 2023,
+          "value": -1.9
+        },
+        {
+          "year": 2024,
+          "value": -1.4
+        },
+        {
+          "year": 2025,
+          "value": 4.5
+        },
+        {
+          "year": 2026,
+          "value": 2.1
+        },
+        {
+          "year": 2027,
+          "value": 3.5
+        },
+        {
+          "year": 2028,
+          "value": 4.2
+        },
+        {
+          "year": 2029,
+          "value": 3.8
+        },
+        {
+          "year": 2030,
+          "value": 3.3
+        },
+        {
+          "year": 2031,
+          "value": 3
+        }
+      ]
+    },
+    "PCPIPCH": {
+      "source_url": "https://www.imf.org/external/datamapper/api/v1/PCPIPCH/ARG",
+      "points": [
+        {
+          "year": 1998,
+          "value": 0.9
+        },
+        {
+          "year": 1999,
+          "value": -1.2
+        },
+        {
+          "year": 2000,
+          "value": -0.9
+        },
+        {
+          "year": 2001,
+          "value": -1.1
+        },
+        {
+          "year": 2002,
+          "value": 25.9
+        },
+        {
+          "year": 2003,
+          "value": 13.4
+        },
+        {
+          "year": 2004,
+          "value": 4.4
+        },
+        {
+          "year": 2005,
+          "value": 9.6
+        },
+        {
+          "year": 2006,
+          "value": 10.9
+        },
+        {
+          "year": 2007,
+          "value": 8.8
+        },
+        {
+          "year": 2008,
+          "value": 8.6
+        },
+        {
+          "year": 2009,
+          "value": 6.3
+        },
+        {
+          "year": 2010,
+          "value": 10.5
+        },
+        {
+          "year": 2011,
+          "value": 9.8
+        },
+        {
+          "year": 2012,
+          "value": 10
+        },
+        {
+          "year": 2013,
+          "value": 10.6
+        },
+        {
+          "year": 2017,
+          "value": 25.7
+        },
+        {
+          "year": 2018,
+          "value": 34.3
+        },
+        {
+          "year": 2019,
+          "value": 53.5
+        },
+        {
+          "year": 2020,
+          "value": 42
+        },
+        {
+          "year": 2021,
+          "value": 48.4
+        },
+        {
+          "year": 2022,
+          "value": 72.4
+        },
+        {
+          "year": 2023,
+          "value": 133.5
+        },
+        {
+          "year": 2024,
+          "value": 219.9
+        },
+        {
+          "year": 2025,
+          "value": 41.9
+        },
+        {
+          "year": 2026,
+          "value": 32.5
+        },
+        {
+          "year": 2027,
+          "value": 21.2
+        },
+        {
+          "year": 2028,
+          "value": 14.8
+        },
+        {
+          "year": 2029,
+          "value": 9.6
+        },
+        {
+          "year": 2030,
+          "value": 7.5
+        },
+        {
+          "year": 2031,
+          "value": 7.5
+        }
+      ]
+    },
+    "GGXWDG_NGDP": {
+      "source_url": "https://www.imf.org/external/datamapper/api/v1/GGXWDG_NGDP/ARG",
+      "points": [
+        {
+          "year": 1992,
+          "value": 25
+        },
+        {
+          "year": 1993,
+          "value": 26.9
+        },
+        {
+          "year": 1994,
+          "value": 28.4
+        },
+        {
+          "year": 1995,
+          "value": 30.7
+        },
+        {
+          "year": 1996,
+          "value": 32.6
+        },
+        {
+          "year": 1997,
+          "value": 31.7
+        },
+        {
+          "year": 1998,
+          "value": 34.1
+        },
+        {
+          "year": 1999,
+          "value": 38.9
+        },
+        {
+          "year": 2000,
+          "value": 40.8
+        },
+        {
+          "year": 2001,
+          "value": 48
+        },
+        {
+          "year": 2002,
+          "value": 147.2
+        },
+        {
+          "year": 2003,
+          "value": 125.2
+        },
+        {
+          "year": 2004,
+          "value": 117.9
+        },
+        {
+          "year": 2005,
+          "value": 80.3
+        },
+        {
+          "year": 2006,
+          "value": 70.8
+        },
+        {
+          "year": 2007,
+          "value": 62.1
+        },
+        {
+          "year": 2008,
+          "value": 53.8
+        },
+        {
+          "year": 2009,
+          "value": 55.4
+        },
+        {
+          "year": 2010,
+          "value": 43.5
+        },
+        {
+          "year": 2011,
+          "value": 38.9
+        },
+        {
+          "year": 2012,
+          "value": 40.4
+        },
+        {
+          "year": 2013,
+          "value": 43.5
+        },
+        {
+          "year": 2014,
+          "value": 44.7
+        },
+        {
+          "year": 2015,
+          "value": 52.6
+        },
+        {
+          "year": 2016,
+          "value": 53.1
+        },
+        {
+          "year": 2017,
+          "value": 57
+        },
+        {
+          "year": 2018,
+          "value": 85.2
+        },
+        {
+          "year": 2019,
+          "value": 89.8
+        },
+        {
+          "year": 2020,
+          "value": 103.8
+        },
+        {
+          "year": 2021,
+          "value": 81
+        },
+        {
+          "year": 2022,
+          "value": 84.3
+        },
+        {
+          "year": 2023,
+          "value": 153.4
+        },
+        {
+          "year": 2024,
+          "value": 84.6
+        },
+        {
+          "year": 2025,
+          "value": 80.1
+        },
+        {
+          "year": 2026,
+          "value": 69.3
+        },
+        {
+          "year": 2027,
+          "value": 70.4
+        },
+        {
+          "year": 2028,
+          "value": 65.6
+        },
+        {
+          "year": 2029,
+          "value": 60.3
+        },
+        {
+          "year": 2030,
+          "value": 56.7
+        },
+        {
+          "year": 2031,
+          "value": 53.9
+        }
+      ]
+    },
+    "BCA_NGDPD": {
+      "source_url": "https://www.imf.org/external/datamapper/api/v1/BCA_NGDPD/ARG",
+      "points": [
+        {
+          "year": 1980,
+          "value": -1.1
+        },
+        {
+          "year": 1981,
+          "value": -3
+        },
+        {
+          "year": 1982,
+          "value": -3.1
+        },
+        {
+          "year": 1983,
+          "value": -2.1
+        },
+        {
+          "year": 1984,
+          "value": -1.9
+        },
+        {
+          "year": 1985,
+          "value": -1
+        },
+        {
+          "year": 1986,
+          "value": -2.4
+        },
+        {
+          "year": 1987,
+          "value": -3.5
+        },
+        {
+          "year": 1988,
+          "value": -1.1
+        },
+        {
+          "year": 1989,
+          "value": 1.2
+        },
+        {
+          "year": 1990,
+          "value": 3
+        },
+        {
+          "year": 1991,
+          "value": -0.2
+        },
+        {
+          "year": 1992,
+          "value": -2.5
+        },
+        {
+          "year": 1993,
+          "value": -3
+        },
+        {
+          "year": 1994,
+          "value": -3.8
+        },
+        {
+          "year": 1995,
+          "value": -1.8
+        },
+        {
+          "year": 1996,
+          "value": -2.4
+        },
+        {
+          "year": 1997,
+          "value": -3.8
+        },
+        {
+          "year": 1998,
+          "value": -4.4
+        },
+        {
+          "year": 1999,
+          "value": -3.8
+        },
+        {
+          "year": 2000,
+          "value": -2.9
+        },
+        {
+          "year": 2001,
+          "value": -1.3
+        },
+        {
+          "year": 2002,
+          "value": 7.7
+        },
+        {
+          "year": 2003,
+          "value": 5.6
+        },
+        {
+          "year": 2004,
+          "value": 1.8
+        },
+        {
+          "year": 2005,
+          "value": 2.5
+        },
+        {
+          "year": 2006,
+          "value": 2.8
+        },
+        {
+          "year": 2007,
+          "value": 2.1
+        },
+        {
+          "year": 2008,
+          "value": 1.5
+        },
+        {
+          "year": 2009,
+          "value": 2.2
+        },
+        {
+          "year": 2010,
+          "value": -0.4
+        },
+        {
+          "year": 2011,
+          "value": -1
+        },
+        {
+          "year": 2012,
+          "value": -0.4
+        },
+        {
+          "year": 2013,
+          "value": -2.1
+        },
+        {
+          "year": 2014,
+          "value": -1.6
+        },
+        {
+          "year": 2015,
+          "value": -2.7
+        },
+        {
+          "year": 2016,
+          "value": -2.7
+        },
+        {
+          "year": 2017,
+          "value": -4.8
+        },
+        {
+          "year": 2018,
+          "value": -5.2
+        },
+        {
+          "year": 2019,
+          "value": -0.8
+        },
+        {
+          "year": 2020,
+          "value": 0.7
+        },
+        {
+          "year": 2021,
+          "value": 1.4
+        },
+        {
+          "year": 2022,
+          "value": -0.6
+        },
+        {
+          "year": 2023,
+          "value": -3.4
+        },
+        {
+          "year": 2024,
+          "value": 0.9
+        },
+        {
+          "year": 2025,
+          "value": -1.1
+        },
+        {
+          "year": 2026,
+          "value": 0.6
+        },
+        {
+          "year": 2027,
+          "value": 0.6
+        },
+        {
+          "year": 2028,
+          "value": 0.7
+        },
+        {
+          "year": 2029,
+          "value": 0.8
+        },
+        {
+          "year": 2030,
+          "value": 0.9
+        },
+        {
+          "year": 2031,
+          "value": 0.9
+        }
+      ]
+    }
+  }
+}
