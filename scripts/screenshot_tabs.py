@@ -34,9 +34,11 @@ def main():
         page = browser.new_page(viewport={"width": 1400, "height": 900})
         page.on("console", lambda msg: errors.append(msg.text) if msg.type == "error" else None)
         page.on("pageerror", lambda exc: errors.append(str(exc)))
+        page.goto(base, wait_until="networkidle", timeout=60000)
+        page.wait_for_timeout(800)
         for tab in TABS:
-            page.goto(f"{base}#{tab}", wait_until="networkidle", timeout=60000)
-            page.wait_for_timeout(1200)
+            page.click(f'nav.tabs button[data-tab="{tab}"]')
+            page.wait_for_timeout(1400)
             out1 = Path(f"/workspace/arg_{tab}.png")
             out2 = DOCS / f"tab-{tab}.png"
             page.screenshot(path=str(out1), full_page=True)

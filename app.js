@@ -194,10 +194,12 @@ function initUI() {
     S.drawn = {};
     renderAll();
   };
-  if (location.hash) {
+  const applyHash = () => {
     const t = location.hash.slice(1);
-    if ($(`[data-tab="${t}"]`)) S.tab = t;
-  }
+    if (t && $(`[data-tab="${t}"]`)) switchTab(t);
+  };
+  if (location.hash) S.tab = location.hash.slice(1);
+  window.addEventListener("hashchange", applyHash);
   initDebtSim();
   initScenarios();
 }
