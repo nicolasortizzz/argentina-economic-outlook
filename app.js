@@ -355,22 +355,19 @@ function tabOverview() {
       .join("") +
     `</div>`;
   const from = "2023-01-01";
-  const fx = filterFrom(from, officialSeries());
-  const resv = filterFrom(from, pts("reserves_usd_mn"));
-  const merged = mergeSeriesByDate(fx, resv);
-  const yRes = numRange(merged.map((p) => p.b));
-  const yFx = numRange(merged.map((p) => p.a));
+  const fx = filterFrom(null, officialSeries(), from);
+  const resv = filterFrom(null, pts("reserves_usd_mn"), from);
   plot(
     "ovFxRes",
     [
-      { type: "scatter", name: "Reserves (USD mn)", x: merged.map((p) => p.date), y: merged.map((p) => p.b), line: { color: css("--ac2"), width: 2 }, connectgaps: false },
-      { type: "scatter", name: "FX wholesale/ref", x: merged.map((p) => p.date), y: merged.map((p) => p.a), yaxis: "y2", line: { color: css("--ac"), width: 2 }, connectgaps: false },
+      { type: "scatter", mode: "lines", name: "Reserves (USD mn)", x: resv.map((p) => p.date), y: resv.map((p) => p.value), line: { color: css("--ac2"), width: 2 } },
+      { type: "scatter", mode: "lines", name: "FX official (ARS/USD)", x: fx.map((p) => p.date), y: fx.map((p) => p.value), yaxis: "y2", line: { color: css("--ac"), width: 2 } },
     ],
     {
       margin: { l: 58, r: 62, t: 10, b: 40 },
-      yaxis: { title: "Reserves (USD mn)", automargin: true, titlefont: { size: 11 }, range: yRes },
-      yaxis2: { overlaying: "y", side: "right", title: "ARS/USD", automargin: true, titlefont: { size: 11 }, range: yFx },
-      hovermode: "x unified",
+      yaxis: { title: "Reserves (USD mn)", automargin: true },
+      yaxis2: { overlaying: "y", side: "right", title: "ARS/USD", automargin: true, showgrid: false },
+      hovermode: "x unified", shapes: mileiShape(),
     }
   );
 }
